@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import SessionLocal
 from models import Assignment
+from schemas import AssignmentCreate
 
 app = FastAPI()
 app.add_middleware(
@@ -23,14 +24,11 @@ def get_db():
         db.close()
 
 @app.post("/api/assignments", status_code=201)
-def create_assignment(data: dict, db: Session = Depends(get_db)):
-    if "title" not in data or not data["title"]:
-        raise HTTPException(status_code=400, detail="Title is required")
-
+def create_assignment(data: AssignmentCreate, db: Session = Depends(get_db)):
     assignment = Assignment(
-        title=data["title"],
-        description=data.get("description"),
-        status=data.get("status", "Pending")
+        title=data.title,
+        description=data.description,
+        status="Pending"
     )
 
     db.add(assignment)
@@ -38,6 +36,7 @@ def create_assignment(data: dict, db: Session = Depends(get_db)):
     db.refresh(assignment)
 
     return assignment
+
 
 @app.get("/api/assignments")
 def list_assignments(db: Session = Depends(get_db)):
