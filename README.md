@@ -2,11 +2,6 @@
 
 A full-stack web application for managing academic assignments. Built with FastAPI backend and React frontend.
 
-![Assignment Tracker](https://img.shields.io/badge/Status-Complete-success)
-![Python](https://img.shields.io/badge/Python-3.9+-blue)
-![React](https://img.shields.io/badge/React-18+-61DAFB)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688)
-
 ## Features
 
 - **Complete CRUD Operations** - Create, Read, Update, and Delete assignments
@@ -233,10 +228,6 @@ npm install
 ## Contributors
 
 - Muhammad Rizwan ([@Rizzwan285](https://github.com/Rizzwan285))
-
-## License
-
-This project is created for educational purposes.
 
 ## Acknowledgments
 
