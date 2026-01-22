@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Eye, Pencil, Trash2, ChevronDown, Clock, Search } from "lucide-react";
+import { Eye, Pencil, Trash2, ChevronDown, Clock, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Calendar, Clock as ClockIcon } from "lucide-react";
 import { format } from "date-fns";
 
@@ -7,6 +7,8 @@ function AssignmentList({ assignments, onView, onEdit, onDelete }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const dropdownRef = useRef(null);
 
   const getStatusClass = (status) => {
@@ -25,6 +27,11 @@ function AssignmentList({ assignments, onView, onEdit, onDelete }) {
     };
   }, []);
 
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterStatus, searchQuery, assignments]);
+
   const getRecentAssignments = () => {
     return [...assignments]
       .sort((a, b) => new Date(b.updated_time) - new Date(a.updated_time))
@@ -36,12 +43,26 @@ function AssignmentList({ assignments, onView, onEdit, onDelete }) {
     setIsDropdownOpen(false);
   };
 
+  // 1. Filter assignments
   const filteredAssignments = assignments.filter((assignment) => {
     const matchesStatus = filterStatus === "All" || assignment.status === filterStatus;
     const matchesSearch = assignment.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (assignment.description && assignment.description.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesStatus && matchesSearch;
   });
+
+  // 2. Sort by creation time descending (Last created first)
+  const sortedAssignments = [...filteredAssignments].sort((a, b) =>
+    new Date(b.created_time) - new Date(a.created_time)
+  );
+
+  // 3. Paginate
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAssignments = sortedAssignments.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(sortedAssignments.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (assignments.length === 0) {
     return (
@@ -61,7 +82,7 @@ function AssignmentList({ assignments, onView, onEdit, onDelete }) {
         >
           <h2 className="section-header">
             Assignments
-            <span className="section-count">({assignments.length})</span>
+            <span className="section-count">({filteredAssignments.length})</span>
           </h2>
           <ChevronDown size={18} className={`section-chevron ${isDropdownOpen ? 'rotate' : ''}`} />
         </button>
@@ -121,74 +142,112 @@ function AssignmentList({ assignments, onView, onEdit, onDelete }) {
         </div>
       </div>
 
-      {filteredAssignments.length === 0 ? (
+      {sortedAssignments.length === 0 ? (
         <div className="empty-state">
           <p>No assignments match your filters.</p>
         </div>
       ) : (
-        <div className="assignments-list">
-          {filteredAssignments.map((assignment) => {
-            const formattedDate = format(new Date(assignment.created_time), 'MMM d, yyyy');
-            const formattedTime = format(new Date(assignment.created_time), 'h:mm a');
+        <>
+          <div className="assignments-list">
+            {currentAssignments.map((assignment) => {
+              const formattedDate = format(new Date(assignment.created_time), 'MMM d, yyyy');
+              const formattedTime = format(new Date(assignment.created_time), 'h:mm a');
 
-            return (
-              <div key={assignment.id} className="assignment-card animate-fade-in">
-                <div className="card-header">
-                  <div className="card-header-content">
-                    <div className="card-title-area">
-                      <h3 className="card-title">{assignment.title}</h3>
-                    </div>
-                    <span className={`status-badge ${getStatusClass(assignment.status)}`}>
-                      {assignment.status}
-                    </span>
-                  </div>
-                </div>
-                <div className="card-body">
-                  {assignment.description && (
-                    <p className="card-description line-clamp-2">
-                      {assignment.description}
-                    </p>
-                  )}
-                  <div className="card-footer">
-                    <div className="card-meta">
-                      <span className="meta-item">
-                        <Calendar className="meta-icon" />
-                        {formattedDate}
-                      </span>
-                      <span className="meta-item">
-                        <ClockIcon className="meta-icon" />
-                        {formattedTime}
+              return (
+                <div key={assignment.id} className="assignment-card animate-fade-in">
+                  <div className="card-header">
+                    <div className="card-header-content">
+                      <div className="card-title-area">
+                        <h3 className="card-title">{assignment.title}</h3>
+                      </div>
+                      <span className={`status-badge ${getStatusClass(assignment.status)}`}>
+                        {assignment.status}
                       </span>
                     </div>
-                    <div className="card-actions">
-                      <button
-                        className="btn-icon"
-                        onClick={() => onView(assignment)}
-                        title="View details"
-                      >
-                        <Eye size={18} />
-                      </button>
-                      <button
-                        className="btn-icon"
-                        onClick={() => onEdit(assignment)}
-                        title="Edit assignment"
-                      >
-                        <Pencil size={18} />
-                      </button>
-                      <button
-                        className="btn-icon danger"
-                        onClick={() => onDelete(assignment)}
-                        title="Delete assignment"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                  </div>
+                  <div className="card-body">
+                    {assignment.description && (
+                      <p className="card-description line-clamp-2">
+                        {assignment.description}
+                      </p>
+                    )}
+                    <div className="card-footer">
+                      <div className="card-meta">
+                        <span className="meta-item">
+                          <Calendar className="meta-icon" />
+                          {formattedDate}
+                        </span>
+                        <span className="meta-item">
+                          <ClockIcon className="meta-icon" />
+                          {formattedTime}
+                        </span>
+                      </div>
+                      <div className="card-actions">
+                        <button
+                          className="btn-icon"
+                          onClick={() => onView(assignment)}
+                          title="View details"
+                        >
+                          <Eye size={18} />
+                        </button>
+                        <button
+                          className="btn-icon"
+                          onClick={() => onEdit(assignment)}
+                          title="Edit assignment"
+                        >
+                          <Pencil size={18} />
+                        </button>
+                        <button
+                          className="btn-icon danger"
+                          onClick={() => onDelete(assignment)}
+                          title="Delete assignment"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="pagination-container">
+              <button
+                className="pagination-btn"
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              <div className="pagination-numbers">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`pagination-number ${currentPage === i + 1 ? 'active' : ''}`}
+                    onClick={() => paginate(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
-            );
-          })}
-        </div>
+
+              <button
+                className="pagination-btn"
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight size={16} />
+              </button>
+
+              <span className="pagination-info">
+                Page {currentPage} of {totalPages}
+              </span>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
