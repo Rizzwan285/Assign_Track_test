@@ -1,48 +1,47 @@
-# 📚 Assignment Tracking System
+# Assignment Tracking System
 
-A full-stack web application for managing academic assignments with a modern, colorful UI. Built with FastAPI backend and React frontend.
+A full-stack web application for managing academic assignments. Built with FastAPI backend and React frontend.
 
 ![Assignment Tracker](https://img.shields.io/badge/Status-Complete-success)
 ![Python](https://img.shields.io/badge/Python-3.9+-blue)
 ![React](https://img.shields.io/badge/React-18+-61DAFB)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688)
 
-## ✨ Features
+## Features
 
-- ✅ **Complete CRUD Operations** - Create, Read, Update, and Delete assignments
-- 📊 **Live Statistics Dashboard** - Real-time count of Pending, In Progress, and Completed assignments
-- 🎨 **Vibrant UI Design** - Modern card-based layout with colorful status indicators
-- 📅 **Smart Date Formatting** - Human-readable dates (e.g., "Jan 21, 2026 at 4:07 PM")
-- 🔄 **Status Cycling** - Click status badges to cycle through Pending → In Progress → Completed
-- 🎯 **Expandable Forms** - Minimalist collapsed form that expands on demand
-- ⚡ **Real-time Updates** - Instant UI refresh after any operation
-- 🗄️ **Persistent Storage** - PostgreSQL database with automatic timestamps
+- **Complete CRUD Operations** - Create, Read, Update, and Delete assignments
+- **Live Statistics Dashboard** - Real-time count of Pending, In Progress, and Completed assignments
+- **UI Design** - Card-based layout with status indicators
+- **Date Formatting** - Human-readable dates
+- **Status Cycling** - Click status badges to update status
+- **Real-time Updates** - Instant UI refresh after any operation
+- **Persistent Storage** - PostgreSQL database
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend
-- **FastAPI** - Modern Python web framework
-- **SQLAlchemy** - SQL toolkit and ORM
+- **FastAPI** - Python web framework
+- **SQLAlchemy** - ORM
 - **PostgreSQL** - Relational database
 - **Pydantic** - Data validation
 - **Uvicorn** - ASGI server
 
 ### Frontend
 - **React** - UI library
-- **Lucide React** - Icon system
+- **Lucide React** - Icons
 - **date-fns** - Date formatting
-- **Vanilla CSS** - Custom styling with design tokens
+- **Vanilla CSS** - Custom styling
 
-## 📋 Prerequisites
+## Prerequisites
 
-Before you begin, ensure you have the following installed:
+Ensure you have the following installed:
 
-- **Python 3.9+** - [Download](https://www.python.org/downloads/)
-- **Node.js 16+** - [Download](https://nodejs.org/)
-- **PostgreSQL** - [Download](https://www.postgresql.org/download/)
-- **Git** - [Download](https://git-scm.com/downloads)
+- **Python 3.9+**
+- **Node.js 16+**
+- **PostgreSQL**
+- **Git**
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the Repository
 
@@ -107,7 +106,7 @@ cd ../frontend
 npm install
 ```
 
-## ▶️ Running the Application
+## Running the Application
 
 ### Start Backend Server
 
@@ -118,7 +117,7 @@ uvicorn main:app --reload
 ```
 
 Backend will run at: **http://localhost:8000**
-- API Docs (Swagger): **http://localhost:8000/docs**
+- API Docs: **http://localhost:8000/docs**
 
 ### Start Frontend Server
 
@@ -131,7 +130,7 @@ npm start
 
 Frontend will run at: **http://localhost:3000**
 
-## 📡 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -153,47 +152,44 @@ curl -X POST "http://localhost:8000/api/assignments" \
   }'
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Assign_Track_test/
 ├── backend/
-│   ├── main.py              # FastAPI application and routes
-│   ├── models.py            # SQLAlchemy database models
-│   ├── schemas.py           # Pydantic validation schemas
-│   ├── database.py          # Database connection setup
-│   ├── create_db.py         # Database creation script
-│   └── reset_db.py          # Database reset utility
+│   ├── main.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── database.py
+│   ├── create_db.py
+│   └── reset_db.py
 ├── frontend/
 │   ├── public/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── AssignmentForm.js    # Create assignment form
-│   │   │   ├── AssignmentList.js    # Assignment cards display
-│   │   │   └── StatsBar.js          # Statistics dashboard
-│   │   ├── api.js           # API service layer
-│   │   ├── App.js           # Main application component
-│   │   ├── App.css          # Component styles
-│   │   └── index.css        # Global styles & design tokens
+│   │   ├── api.js
+│   │   ├── App.js
+│   │   ├── App.css
+│   │   └── index.css
 │   └── package.json
 └── README.md
 ```
 
-## 🎨 Data Model
+## Data Model
 
 ### Assignment
 ```typescript
 {
-  id: number                 // Auto-generated
-  title: string              // Required
-  description: string?       // Optional
-  status: string            // "Pending" | "In Progress" | "Completed"
-  created_time: datetime    // Auto-generated
-  updated_time: datetime    // Auto-updated
+  id: number
+  title: string
+  description: string?
+  status: string
+  created_time: datetime
+  updated_time: datetime
 }
 ```
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Database Connection Failed
 - Ensure PostgreSQL service is running
@@ -214,40 +210,34 @@ uvicorn main:app --reload --port 8001
 Ensure all dependencies are installed:
 ```bash
 # Backend
-pip install -r requirements.txt  # if available
+pip install -r requirements.txt
 # or install manually as shown in Setup
 
 # Frontend
 npm install
 ```
 
-## 🧪 Testing the Application
+## Testing the Application
 
 1. **Create Assignment**: Fill the form and click "Create Assignment"
 2. **View Stats**: Check the stats bar updates with counts
 3. **Cycle Status**: Click on status badges to change status
 4. **Delete**: Hover over a card and click the trash icon
 
-## 📝 Environment Variables
+## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/assignment_db` | PostgreSQL connection string |
 
-## 👥 Contributors
+## Contributors
 
 - Muhammad Rizwan ([@Rizzwan285](https://github.com/Rizzwan285))
 
-## 📄 License
+## License
 
 This project is created for educational purposes.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built as part of OELP Assignment
-- UI inspired by modern design patterns
-- Icons by [Lucide](https://lucide.dev/)
-
----
-
-**Made with ❤️ using FastAPI and React**
